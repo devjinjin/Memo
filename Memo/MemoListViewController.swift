@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TodoListViewController: UIViewController {
+class MemoListViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var inputViewBottom: NSLayoutConstraint!
@@ -44,7 +44,7 @@ class TodoListViewController: UIViewController {
     // TODO: BG 탭했을때, 키보드 내려오게 하기
 }
 
-extension TodoListViewController {
+extension MemoListViewController {
     @objc private func adjustInputView(noti: Notification) {
         guard let userInfo = noti.userInfo else { return }
         // TODO: 키보드 높이에 따른 인풋뷰 위치 변경
@@ -52,20 +52,20 @@ extension TodoListViewController {
     }
 }
 
-extension TodoListViewController: UICollectionViewDataSource {
+extension MemoListViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // TODO: 섹션 몇개
-        return 0
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // TODO: 섹션별 아이템 몇개
-        return 0
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // TODO: 커스텀 셀
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodoListCell", for: indexPath) as? TodoListCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemoListCell", for: indexPath) as? MemoListCell else {
             return UICollectionViewCell()
         }
         return cell
@@ -79,11 +79,11 @@ extension TodoListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "TodoListHeaderView", for: indexPath) as? TodoListHeaderView else {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "MemoListHeaderView", for: indexPath) as? MemoListHeaderView else {
                 return UICollectionReusableView()
             }
             
-            guard let section = TodoViewModel.Section(rawValue: indexPath.section) else {
+            guard let section = MemoViewModel.Section(rawValue: indexPath.section) else {
                 return UICollectionReusableView()
             }
             
@@ -95,14 +95,19 @@ extension TodoListViewController: UICollectionViewDataSource {
     }
 }
 
-extension TodoListViewController: UICollectionViewDelegateFlowLayout {
+extension MemoListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // TODO: 사이즈 계산하기
-        return CGSize.zero
+        
+        let width : CGFloat = collectionView.bounds.width
+        let height : CGFloat = 50
+        
+        
+        return CGSize(width: width, height: height)
     }
 }
 
-class TodoListCell: UICollectionViewCell {
+class MemoListCell: UICollectionViewCell {
     
     @IBOutlet weak var checkButton: UIButton!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -124,13 +129,13 @@ class TodoListCell: UICollectionViewCell {
         reset()
     }
     
-    func updateUI(todo: Todo) {
+    func updateUI(memo: Memo) {
         // TODO: 셀 업데이트 하기
-        checkButton.isSelected = todo.isDone
-        descriptionLabel.text = todo.detail
-        descriptionLabel.alpha = todo.isDone ? 0.2 : 1
-        deleteButton.isHidden = todo.isDone == false
-        showStrikeThrough(todo.isDone)
+        checkButton.isSelected = memo.isDone
+        descriptionLabel.text = memo.detail
+        descriptionLabel.alpha = memo.isDone ? 0.2 : 1
+        deleteButton.isHidden = memo.isDone == false
+        showStrikeThrough(memo.isDone)
     }
     
     private func showStrikeThrough(_ show: Bool) {
@@ -158,7 +163,7 @@ class TodoListCell: UICollectionViewCell {
     }
 }
 
-class TodoListHeaderView: UICollectionReusableView {
+class MemoListHeaderView: UICollectionReusableView {
     
     @IBOutlet weak var sectionTitleLabel: UILabel!
     

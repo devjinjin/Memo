@@ -95,7 +95,7 @@ public class Storage {
 
 // MARK: TEST 용
 extension Storage {
-    static func saveTodo(_ obj: Todo, fileName: String) {
+    static func saveMemo(_ obj: Memo, fileName: String) {
         let url = Directory.documents.url.appendingPathComponent(fileName, isDirectory: false)
         print("---> [TEST] save to here: \(url)")
         let encoder = JSONEncoder()
@@ -112,7 +112,7 @@ extension Storage {
         }
     }
     
-    static func restoreTodo(_ fileName: String) -> Todo? {
+    static func restoreMemo(_ fileName: String) -> Memo? {
         let url = Directory.documents.url.appendingPathComponent(fileName, isDirectory: false)
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
         guard let data = FileManager.default.contents(atPath: url.path) else { return nil }
@@ -120,7 +120,7 @@ extension Storage {
         let decoder = JSONDecoder()
         
         do {
-            let model = try decoder.decode(Todo.self, from: data)
+            let model = try decoder.decode(Memo.self, from: data)
             return model
         } catch let error {
             print("---> Failed to decode msg: \(error.localizedDescription)")

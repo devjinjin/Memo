@@ -16,12 +16,14 @@ struct Memo: Codable, Equatable {
     
     mutating func update(isDone: Bool, detail: String, isToday: Bool) {
         // TODO: update 로직 추가
-        
+        self.isDone = isDone
+        self.detail = detail
+        self.isToday = isToday
     }
     
     static func == (lhs: Self, rhs: Self) -> Bool {
         // TODO: 동등 조건 추가
-        return true
+        return lhs.id == rhs.id
     }
 }
 
@@ -35,21 +37,36 @@ class MemoManager {
     
     func createMemo(detail: String, isToday: Bool) -> Memo {
         //TODO: create로직 추가
-        return Memo(id: 1, isDone: false, detail: "2", isToday: true)
+        let nextId = MemoManager.lastId + 1
+        MemoManager.lastId = nextId
+        
+        return Memo(id: nextId, isDone: false, detail: detail, isToday: isToday)
     }
     
     func addMemo(_ memo: Memo) {
         //TODO: add로직 추가
+    
+        memoes.append(memo)
+        saveMemo()
     }
     
     func deleteMemo(_ memo: Memo) {
         //TODO: delete 로직 추가
-        
+//        memoes = memoes.filter( $0.id != memo.id )
+
+        if let index = memoes.firstIndex(of: memo){
+            memoes.remove(at: index)
+        }
+        saveMemo()
     }
     
     func updateMemo(_ memo: Memo) {
         //TODO: updatee 로직 추가
-        
+        guard let index = memoes.firstIndex(of: memo) else {
+            return
+        }
+        memoes[index].update(isDone: memo.isDone, detail: memo.detail, isToday: memo.isToday)
+        saveMemo()
     }
     
     func saveMemo() {
